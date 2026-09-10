@@ -1,5 +1,7 @@
 # elegoo-cc2-helper
 
+[English](README_EN.md)
+
 这是我折腾 ELEGOO Centauri Carbon 2（CC2）留下的代码和笔记：SSH、固件差异、主题切换，还有自己写的蜂鸣器提示音程序。
 
 `elegoo-cc2-helper` 用 Go 编写，让打印机在开始、暂停、恢复、取消和完成打印时播放不同的提示音。
