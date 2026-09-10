@@ -70,39 +70,55 @@ start_service() {
 		path := filepath.Join(root, item.path)
 		info, statErr := os.Lstat(path)
 		if statErr == nil {
+			if info.IsDir() {
+				return fmt.Errorf("installation target must not be a directory: %s", path)
+			}
 			if item.target != "" {
 				if target, readErr := os.Readlink(path); readErr == nil && target == item.target {
 					continue
 				}
-			} else if info.Mode().IsRegular() && info.Mode().Perm()&0111 != 0 {
+			} else if info.Mode().IsRegular() && info.Mode().Perm() == 0755 {
 				if data, readErr := os.ReadFile(path); readErr == nil && bytes.Equal(data, item.data) {
 					continue
 				}
 			}
-			return fmt.Errorf("refusing to overwrite existing path: %s", path)
-		}
-		if !os.IsNotExist(statErr) {
+		} else if !os.IsNotExist(statErr) {
 			return statErr
 		}
-		if item.target != "" {
-			if err = os.Symlink(item.target, path); err != nil {
-				return err
-			}
-			created = append(created, path)
-			continue
-		}
-		file, openErr := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0755)
+		file, openErr := os.CreateTemp(filepath.Dir(path), ".elegoo-cc2-helper-*")
 		if openErr != nil {
 			return openErr
 		}
-		created = append(created, path)
-		_, err = file.Write(item.data)
-		closeErr := file.Close()
-		if err != nil {
+		temporary := file.Name()
+		defer os.Remove(temporary)
+		if item.target != "" {
+			if err = file.Close(); err != nil {
+				return err
+			}
+			if err = os.Remove(temporary); err != nil {
+				return err
+			}
+			if err = os.Symlink(item.target, temporary); err != nil {
+				return err
+			}
+		} else {
+			_, err = file.Write(item.data)
+			if err == nil {
+				err = file.Chmod(0755)
+			}
+			closeErr := file.Close()
+			if err != nil {
+				return err
+			}
+			if closeErr != nil {
+				return closeErr
+			}
+		}
+		if err = os.Rename(temporary, path); err != nil {
 			return err
 		}
-		if closeErr != nil {
-			return closeErr
+		if statErr != nil {
+			created = append(created, path)
 		}
 	}
 	return nil

@@ -8,6 +8,8 @@
 
 ![ELEGOO × emoji 联动款产品页面截图](imgs/PixPin_2026-09-09_22-42-57.png)
 
+截图自 [ELEGOO 官网](https://us.elegoo.com/products/elegoo-emoji-centauri-carbon-2-combo)（[网页存档](https://web.archive.org/web/20260907214758/https://us.elegoo.com/products/elegoo-emoji-centauri-carbon-2-combo)）。
+
 同时该机器内置了一套 emoji 主题，此主题实际也被编译进了普通机器的固件，仅需一些简单的办法即可切换。
 
 ## 预览

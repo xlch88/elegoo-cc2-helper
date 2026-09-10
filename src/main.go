@@ -31,7 +31,7 @@ Options:
   -d, --daemon  Run in service mode: play the startup sound and monitor /tmp/elegoo_uds.
   -t, --test    Play all six sounds once, print each sound name, then exit.
   --test-music  Play the opening theme of Fur Elise once (about 10 seconds).
-  --install    Register boot autostart (root required); do not start the service.
+  --install    Install or overwrite autostart files (root required); do not start the service.
 
 Press Ctrl+C to stop playback or service mode.
 `
